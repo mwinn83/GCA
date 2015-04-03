@@ -50,11 +50,13 @@ code_poly <- function(df=NULL, predictor=NULL, poly.order=NULL, orthogonal=TRUE,
   }
   
   # Extract the vector to be used as the predictor
-#   predictor.vector <- df[,which(colnames(df)==predictor)] %>% use_series
+  #   deprecated (will not work with `tbl_df`s :
+  #   predictor.vector <- df[,which(colnames(df)==predictor)]
+  #   This will work for `data.frame`s and `tbl_df`s :
   predictor.vector <- df %>% collect %>% .[[predictor]]
   
-  # create index of predictor (e.g. numbered time bins)
-  # the index of the time bin will be used later as an index to call the time sample
+  # Create index of predictor levels (e.g. numbered time bins)
+  # The index of the time bin will be used later as an index to call the time sample
   predictor.indices <- as.numeric(as.factor(predictor.vector))
   
   df$temp.predictor.index <- predictor.indices
@@ -66,6 +68,8 @@ code_poly <- function(df=NULL, predictor=NULL, poly.order=NULL, orthogonal=TRUE,
   # use predictor index as index to align 
   # polynomial-transformed predictor values with original dataset
   # (as many as called for by the polynomial order)
+  # The `1:poly.order` creates multiple columns, 
+  # and assigns a list to each of those columns.
   df[, paste("poly", 1:poly.order, sep="")] <- 
     predictor.polynomial[predictor.indices, 1:poly.order]
   
