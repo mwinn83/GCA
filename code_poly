@@ -36,9 +36,10 @@ code_poly <- function(df=NULL, predictor=NULL, poly.order=NULL, orthogonal=TRUE,
   #       by indexing each sorted unique time bin and using the index to extract
   #       the polynomial value
   # Revised by Matt Winn (3/19/2015)
-  #   - uses  . %>% collect %>% .[[predictor]] to handle tbl_df objects
+  #   - uses dplyr::collect to handle columns in tbl_df objects
   #     (of the type created when using dplyr),
-  #     from which you cannot extract pure vectors using `[`
+  #     from which you cannot extract pure vectors using `[` or `select`
+  #     it looks like this: . %>% collect %>% .[[predictor]] 
   #===========================================================#
   # convert choice for orthogonal into choice for raw
   raw <- (orthogonal-1)^2
